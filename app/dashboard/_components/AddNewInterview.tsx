@@ -18,16 +18,17 @@ import { v4 as uuidv4 } from 'uuid';
 import { useUser } from '@clerk/nextjs'
 import moment from 'moment'
 import { useRouter } from 'next/navigation';
+
 function AddNewInterview() {
   const [openDialog, setOpenDialog] = useState(false)
   const [jobPosition, setjobPosition] = useState('')
   const [jobDesc, setJobDesc] = useState('')
   const [jobExperience, setjobExperience] = useState('')
-  const [loading,setLoading]=useState(false);
-  const [jsonResponse,setJsonResponse]=useState([]);
+  const [loading, setLoading] = useState(false);
+  const [jsonResponse, setJsonResponse] = useState([]);
   const router = useRouter();
-  const {user} = useUser();
-  const onSubmit = async(e: { preventDefault: () => void; currentTarget: any }) => {
+  const { user } = useUser();
+  const onSubmit = async (e: { preventDefault: () => void; currentTarget: any }) => {
     setLoading(true);
     e.preventDefault()
     const form = e.currentTarget
@@ -37,45 +38,36 @@ function AddNewInterview() {
       return
     }
 
-    console.log("Submitting form with data:", { jobPosition, jobDesc, jobExperience })
-    const InputPrompt="Job position:"+jobPosition+" Job Description:"+jobDesc +"Years of Experience:"+jobExperience+"Depends on Job Position, Job Description & Years of Experience give us"+process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT+"Interview question along with Answer in JSON format, Give us question and answer field on JSON";
-    const result =await chatSession.sendMessage(InputPrompt);
-    const MockJsonResp = (result.response.text()).replace('```json','').replace('```','');
-    console.log(JSON.parse(MockJsonResp));
+    const InputPrompt = "Job position:" + jobPosition + " Job Description:" + jobDesc + "Years of Experience:" + jobExperience + "Depends on Job Position, Job Description & Years of Experience give us" + process.env.NEXT_PUBLIC_INTERVIEW_QUESTION_COUNT + "Interview question along with Answer in JSON format, Give us question and answer field on JSON";
+    const result = await chatSession.sendMessage(InputPrompt);
+    const MockJsonResp = (result.response.text()).replace('```json', '').replace('```', '');
     setJsonResponse(MockJsonResp);
-  
 
 
-    if(MockJsonResp){
-        const resp = await db.insert(MockInterview).values({
-            mockId:uuidv4(),
-            jsonMockResp:MockJsonResp,
-            jobPosition:jobPosition,
-            jobDesc:jobDesc,
-            jobExperience:jobExperience,
-            createdBy:user?.primaryEmailAddress?.emailAddress || '',
-            createdAt:moment().format('DD-MM-yyyy')
-        }).returning({mockId:MockInterview.mockId})
-    
-        console.log("Inserted ID:",resp);
-        if(resp){
-            setOpenDialog(false);
-            router.push('/dashboard/interview/'+resp[0]?.mockId)
-        }
 
+    if (MockJsonResp) {
+      const resp = await db.insert(MockInterview).values({
+        mockId: uuidv4(),
+        jsonMockResp: MockJsonResp,
+        jobPosition: jobPosition,
+        jobDesc: jobDesc,
+        jobExperience: jobExperience,
+        createdBy: user?.primaryEmailAddress?.emailAddress || '',
+        createdAt: moment().format('DD-MM-yyyy')
+      }).returning({ mockId: MockInterview.mockId })
+
+      console.log("Inserted ID:", resp);
+      if (resp) {
+        setOpenDialog(false);
+        router.push('/dashboard/interview/' + resp[0]?.mockId)
+      }
     }
-    else{
-        console.log("Error",e);
+    else {
+      console.log("Error", e);
     }
-
-    
     setLoading(false);
-    // setOpenDialog(false)
-    // setjobPosition('')
-    // setJobDesc('')
-    // setjobExperience('')
   }
-    
+
   return (
     <div>
       <button
@@ -134,13 +126,13 @@ function AddNewInterview() {
                 Cancel
               </Button>
               <Button type="submit" disabled={loading}>
-                {loading?
-                <>
-                <LoaderCircle className='animate-spin'/>'Generating Interview content'
-                </>
-                :'Start Interview'
+                {loading ?
+                  <>
+                    <LoaderCircle className='animate-spin' />'Generating Interview content'
+                  </>
+                  : 'Start Interview'
                 }
-               
+
               </Button>
             </div>
           </form>
@@ -151,5 +143,3 @@ function AddNewInterview() {
 }
 
 export default AddNewInterview
-
-
