@@ -1,0 +1,1 @@
+ALTER TABLE "mockInterview" ADD COLUMN "resumeContent" text NOT NULL;

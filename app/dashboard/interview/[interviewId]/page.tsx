@@ -24,8 +24,6 @@ export default function Interview() {
   const [webCamEnabled, setWebCamEnabled] = useState(false);
 
   useEffect(() => {
-    console.log("params:", params);
-    console.log("interviewId:", params?.interviewId);
     GetInterviewDetails();
   }, [params]);
 
@@ -87,7 +85,7 @@ export default function Interview() {
       {/* Start Button at Bottom Right */}
       <div className="flex justify-end mt-10">
         <Link href={'/dashboard/interview/'+params?.interviewId+'/start'}><Button className="px-6 py-3">Start Interview</Button></Link>
-        
+
       </div>
     </div>
   );
