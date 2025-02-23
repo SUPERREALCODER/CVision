@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import RetroButton from '../ui/retro-button';
 import { AnimatedText } from '../ui/animated-text';
 import { Spotlight } from '../ui/spotlight';
+import Link from 'next/link';
 
 export default function Hero() {
   return (
@@ -16,7 +17,7 @@ export default function Hero() {
           ))}
         </div>
       </div>
-      
+
       <div className="container mx-auto px-4 relative z-10">
         <Spotlight className="p-8">
           <div className="max-w-4xl mx-auto text-center">
@@ -31,12 +32,12 @@ export default function Hero() {
                 <span>AI-Powered Interview Preparation</span>
               </div>
             </motion.div>
-            
+
             <AnimatedText
               text="CVision_ The Future of Interview Prep"
               className="text-6xl font-bold font-mono mb-6 text-orange-500"
             />
-            
+
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -46,17 +47,19 @@ export default function Hero() {
               Level up your interview game with AI-powered practice sessions.
               Get real-time feedback and improve your chances of landing your dream job.
             </motion.p>
-            
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.5 }}
               className="flex gap-4 justify-center"
             >
-              <RetroButton>Start Practicing</RetroButton>
+              <Link href="/dashboard">
+                <RetroButton>Start Practicing</RetroButton>
+              </Link>
               <RetroButton variant="secondary">Watch Demo</RetroButton>
             </motion.div>
-            
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

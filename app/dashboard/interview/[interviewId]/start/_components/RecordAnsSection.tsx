@@ -34,6 +34,8 @@ function RecordAnsSection({ mockInterviewQuestion, activeQuestionIndex, intervie
     continuous: true,
     useLegacyResults: false
   });
+  const [webCamEnabled, setWebCamEnabled] = useState(false);
+
 
   useEffect(() => {
     if (results.length > 0) {
@@ -83,7 +85,25 @@ function RecordAnsSection({ mockInterviewQuestion, activeQuestionIndex, intervie
     <div className='flex items-center justify-center flex-col'>
       <div className='flex flex-col justify-center items-center bg-black rounded-lg p-5 mt-20'>
         <Image src={'/webcam.png'} alt='Webcam icon' width={200} height={200} className='absolute' />
-        <Webcam mirrored={true} style={{ height: 300, width: '100%', zIndex: 10 }} />
+        <div
+          style={{ height: 300, width: '100%', zIndex: 10 }}
+        >
+          {
+            webCamEnabled ? (
+              <Webcam
+                onUserMedia={() => setWebCamEnabled(true)}
+                onUserMediaError={() => setWebCamEnabled(false)}
+                mirrored={true}
+                style={{ height: 300, width: '100%', zIndex: 10 }}
+              />
+            ) : (
+              <div className='flex flex-1 flex-col items-center gap-3'>
+                <p className='text-center'>Webcam is disabled</p>
+                <Button onClick={() => setWebCamEnabled(true)}>Enable Webcam</Button>
+              </div>
+            )
+          }
+        </div>
       </div>
       <Button disabled={isVoiceRecording} variant={'destructive'} className='my-10' onClick={StartStopRecording}>
         {isRecording ? 'Stop Recording' : 'Record Answer'}

@@ -8,6 +8,7 @@ import Webcam from "react-webcam";
 import { Lightbulb, WebcamIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { toast } from "sonner";
 
 export default function Interview() {
   const params = useParams();
@@ -22,20 +23,19 @@ export default function Interview() {
     mockId: any;
   } | undefined>(undefined);
   const [webCamEnabled, setWebCamEnabled] = useState(false);
+  
 
   useEffect(() => {
+    const GetInterviewDetails = async () => {
+      const result = await db
+        .select()
+        .from(MockInterview)
+        .where(eq(MockInterview.mockId, params?.interviewId as string));
+      setInterviewData(result[0]);
+    };
     GetInterviewDetails();
   }, [params]);
 
-  const GetInterviewDetails = async () => {
-    const result = await db
-      .select()
-      .from(MockInterview)
-      .where(eq(MockInterview.mockId, params?.interviewId as string));
-
-    console.log(result);
-    setInterviewData(result[0]);
-  };
 
   return (
     <div className="my-10 mx-auto max-w-4xl">
@@ -84,8 +84,20 @@ export default function Interview() {
 
       {/* Start Button at Bottom Right */}
       <div className="flex justify-end mt-10">
-        <Link href={'/dashboard/interview/'+params?.interviewId+'/start'}><Button className="px-6 py-3">Start Interview</Button></Link>
-
+        {
+          webCamEnabled ? (
+            <Link href={'/dashboard/interview/' + params?.interviewId + '/start'}>
+              <Button className="px-6 py-3">Start Interview</Button>
+            </Link>
+          ) : (
+              <Button
+                onClick={() => {
+                  toast.error("Please enable your webcam and microphone to start the interview");
+                }}
+                className="px-6 py-3"
+              >Start Interview</Button>
+          )
+        }
       </div>
     </div>
   );
