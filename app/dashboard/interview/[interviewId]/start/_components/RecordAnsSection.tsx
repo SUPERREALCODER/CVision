@@ -18,9 +18,10 @@ interface RecordAnsSectionProps {
   isVoiceRecording: boolean
   setIsVoiceRecording: Dispatch<SetStateAction<boolean>>
   setIsRecordingSubmit: Dispatch<SetStateAction<boolean>>
+  webcamRef: any
 }
 
-function RecordAnsSection({ mockInterviewQuestion, activeQuestionIndex, interviewData, isVoiceRecording, setIsVoiceRecording, setIsRecordingSubmit }: RecordAnsSectionProps) {
+function RecordAnsSection({ webcamRef, mockInterviewQuestion, activeQuestionIndex, interviewData, isVoiceRecording, setIsVoiceRecording, setIsRecordingSubmit }: RecordAnsSectionProps) {
   const [userAnswer, setUserAnswer] = useState('');
   const { user } = useUser();
   const {
@@ -35,6 +36,7 @@ function RecordAnsSection({ mockInterviewQuestion, activeQuestionIndex, intervie
     useLegacyResults: false
   });
 
+  console.log(userAnswer)
   useEffect(() => {
     if (results.length > 0) {
       setUserAnswer(results.map(result => typeof result === 'string' ? result : result.transcript).join(' '));
@@ -42,6 +44,7 @@ function RecordAnsSection({ mockInterviewQuestion, activeQuestionIndex, intervie
   }, [results]);
 
   const StartStopRecording = async () => {
+    console.log("console ki maa ki chut, ", isRecording )
     if (isRecording) {
       stopSpeechToText();
       await UpdateUserAnswer();
@@ -54,6 +57,7 @@ function RecordAnsSection({ mockInterviewQuestion, activeQuestionIndex, intervie
 
   const UpdateUserAnswer = async () => {
     setIsVoiceRecording(true);
+    console.log(userAnswer)
     const feedbackPrompt = "Question:" + mockInterviewQuestion[activeQuestionIndex]?.question + ",User Answer:" + userAnswer + ',Depending on question and user answer for given interview question please give us rating for answer and feedback as area of improvement if any in just 3 to 5 lines to improve it in JSON format with rating field and feedback field';
     const result = await chatSession.sendMessage(feedbackPrompt);
     const mockJsonResp = (result.response.text()).replace('```json', '').replace('```', '');
@@ -69,6 +73,7 @@ function RecordAnsSection({ mockInterviewQuestion, activeQuestionIndex, intervie
         userEmail: user?.primaryEmailAddress?.emailAddress,
         createdAt: moment().format('DD-MM-yyyy')
       })
+      console.log(resp)
     if (resp) {
       toast.success('answer recorded in databse');
     } else {
@@ -83,8 +88,13 @@ function RecordAnsSection({ mockInterviewQuestion, activeQuestionIndex, intervie
     <div className='flex items-center justify-center flex-col'>
       <div className='flex flex-col justify-center items-center bg-black rounded-lg p-5 mt-20'>
         <Image src={'/webcam.png'} alt='Webcam icon' width={200} height={200} className='absolute' />
-        <Webcam mirrored={true} style={{ height: 300, width: '100%', zIndex: 10 }} />
-      </div>
+            <Webcam
+              ref={webcamRef}
+              screenshotFormat="image/jpeg"
+              videoConstraints={{ facingMode: "user" }}
+              className="rounded-lg border shadow-md "
+              style={{ height: 300, width: '100%', zIndex: 10 }}
+            />      </div>
       <Button disabled={isVoiceRecording} variant={'destructive'} className='my-10' onClick={StartStopRecording}>
         {isRecording ? 'Stop Recording' : 'Record Answer'}
       </Button>

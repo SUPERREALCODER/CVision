@@ -7,11 +7,12 @@ export const MockInterview = pgTable('mockInterview', {
   jobPosition: varchar('jobPosition').notNull(),
   jobDesc: varchar('jobDesc').notNull(),
   jobExperience: varchar('jobExperience').notNull(),
-  resumeContent: text('resumeContent').notNull(),
   createdBy: varchar('createdBy').notNull(),
   createdAt: varchar('createdAt'),
   mockId: varchar('mockId').notNull()
 })
+
+
 
 export const UserAnswer = pgTable('userAnswer', {
   id: serial('id').primaryKey(),

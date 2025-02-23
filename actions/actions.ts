@@ -38,7 +38,6 @@ export const handleCreateRecruitmentJobProfile = async (data: FormData) => {
     jobPosition: jobPosition,
     jobDesc: jobDesc,
     jobExperience: jobExperience,
-    resumeContent: '',
     createdBy: user?.primaryEmailAddress?.emailAddress || '',
     createdAt: moment().format('DD-MM-yyyy')
   })
