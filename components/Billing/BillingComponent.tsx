@@ -56,18 +56,17 @@ const AnimatedPrice: React.FC<AnimatedPriceProps> = ({ price, prevPrice }) => {
   }, [price, prevPrice])
 
   return (
-    <div className="text-5xl font-bold flex items-center">
-      <IndianRupee size={38} />
-      <div>{displayPrice.toFixed(2)}</div>
+    <div className="text-3xl font-bold flex items-center">
+      <div>{displayPrice}%</div>
     </div>
   )
 }
 
 const BillingPage = () => {
-  const [activeTab, setActiveTab] = useState<string>("hobby")
+  const [activeTab, setActiveTab] = useState<string>("basic")
   const [prevPrice, setPrevPrice] = useState<number>(0)
   const router = useRouter()
-  const activeSubscription =  "HOBBY"
+  const activeSubscription =  "BASIC"
 
   const handleTabChange = (value: string) => {
     const currentTier = tiers.find(tier => tier.name.toLowerCase() === activeTab)
@@ -169,10 +168,10 @@ const BillingPage = () => {
                     </CardHeader>
                     <CardContent className="space-y-6 pt-6">
                       <div className="flex flex-row justify-center items-end">
-                        <AnimatedPrice price={tier.price} prevPrice={prevPrice} />
-                        <AnimatedText className="text-gray-500 mt-2" delay={0.2}>
+                        <AnimatedPrice price={tier.price} prevPrice={prevPrice} /><span className="w-2"></span> Commission Per Hiring
+                        {/* <AnimatedText className="text-gray-500 mt-2" delay={0.2}>
                           {tier.period}
-                        </AnimatedText>
+                        </AnimatedText> */}
                       </div>
                       <ul className="space-y-3">
                         {tier.features.map((feature, index) => (
@@ -201,7 +200,7 @@ const BillingPage = () => {
                       }} className="w-full text-lg py-4 md:py-6" variant={tier.name.toUpperCase() === activeSubscription ? "secondary" : tier.name === "Pro" ? "default" : "outline"}>
                         {
                           tier.name.toUpperCase() === activeSubscription ? "Activated" :
-                            tier.name === "Hobby" ? "Start Free" : "Subscribe"
+                            tier.name === "Basic" ? "Start Free" : "Subscribe"
                         }
                       </Button>
                     </CardFooter>
