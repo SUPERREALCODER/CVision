@@ -1,11 +1,11 @@
-import { Button } from "@/components/ui/button";
-import Image from "next/image";
+import Features from '@/components/sections/features';
+import Hero from '@/components/sections/hero';
 
 export default function Home() {
   return (
-    <div>
-      <h2>test</h2>
-      <Button>test</Button>
-    </div>
+    <main>
+      <Hero />
+      <Features />
+    </main>
   );
 }
