@@ -35,6 +35,8 @@ function RecordAnsSection({ webcamRef, mockInterviewQuestion, activeQuestionInde
     continuous: true,
     useLegacyResults: false
   });
+  const [webCamEnabled, setWebCamEnabled] = useState(false);
+
 
   console.log(userAnswer)
   useEffect(() => {

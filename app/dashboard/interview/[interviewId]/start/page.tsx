@@ -1,13 +1,14 @@
 "use client"
 import { db } from '@/utils/db';
 import { MockInterview } from '@/utils/schema';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react'
 import { eq } from "drizzle-orm";
 import QuestionSection from './_components/QuestionSection';
 import RecordAnsSection from './_components/RecordAnsSection';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
+import { toast } from 'sonner';
 import Webcam from "react-webcam";
 import axios from "axios";
 
@@ -28,6 +29,49 @@ function StartInterview() {
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0);
   const [isRecordingSubmit, setIsRecordingSubmit] = useState<boolean>(false);
   const [isSavingToDB, setIsSavingToDB] = useState<boolean>(false);
+  const [cameraNotOnCnt, setCameraNotOnCnt] = useState(0);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (cameraNotOnCnt > 5) {
+      router.replace('/dashboard/interview/' + interviewData?.mockId + '/feedback');
+    }
+  }, [cameraNotOnCnt])
+
+  // Function to check camera availability
+  const checkCameraStatus = async () => {
+    try {
+      // Request video stream to check if camera is accessible
+      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      const tracks = stream.getVideoTracks();
+
+      // If there are video tracks, it means camera is on
+      if (tracks.length > 0) {
+      }
+
+      // Stop the stream to release the camera
+      stream.getTracks().forEach(track => track.stop());
+    } catch (error) {
+      setCameraNotOnCnt(prev => prev + 1);
+      toast.error(`Camera is not accessible. Please enable camera to continue. ${7 - cameraNotOnCnt}`);
+      console.log("Error: ", error, cameraNotOnCnt);
+    }
+  };
+
+  useEffect(() => {
+    // Initial camera check
+    checkCameraStatus();
+
+    // Set up a polling mechanism to check every 2 seconds if camera is still on
+    const intervalId = setInterval(() => {
+      checkCameraStatus();
+    }, 2000); // Check every 2 seconds
+
+    // Cleanup on component unmount
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, []);
 
   // Face Detection State
   const webcamRef = useRef<Webcam>(null);
