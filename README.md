@@ -8,6 +8,7 @@ CVision is an AI-driven platform that streamlines job recruitment by automating 
 ✅ **Real-time job matching** with AI  
 ✅ **Streamlit-based backend** for intelligent processing  
 ✅ **Next.js-based frontend** for a seamless user experience  
+✅ **Face detection for interview security**  
 
 ---
 
@@ -40,28 +41,35 @@ The site will be available at **`http://localhost:3000`**
 ## Backend Setup (Streamlit + Python)
 
 ### Prerequisites
-- Python 3.9+  
+- Python 3.10.14+  
 - pip installed  
 - Google Gemini API key (if using AI features)  
 
 ### Installation & Running
+#### **For Face Detection Interview Test (Camera Security Features)**
 ```bash
-cd backend
-pip install -r requirements.txt
+cd backend/Face-Detection-Interview-Test
 streamlit run app.py
 ```
+
+#### **For Resume-Based Interview (AI-driven Questions & Matching)**
+```bash
+cd backend/Resume-Based-Interview-Streamlit
+streamlit run app.py
+```
+
+#### **For Recruiter Automation (AI-driven Candidate Selection)**
+```bash
+cd backend/Recruiter-Automation
+streamlit run app.py
+```
+
 The backend will be available at **`http://localhost:8501`**  
 
 ---
 
 ## Environment Variables
 Create a `.env` file in both the `frontend` and `backend` directories and add the following:  
-
-### For Frontend (`frontend/.env`):
-```env
-NEXT_PUBLIC_BACKEND_URL=http://localhost:8501
-```
-
 ### For Backend (`backend/.env`):
 ```env
 GEMINI_API_KEY=your_api_key_here
@@ -78,8 +86,8 @@ GEMINI_API_KEY=your_api_key_here
 
 ### Backend (Streamlit + Python)
 - Streamlit  
-- Google Gemini API  
-- Pandas (for resume processing)  
+- Google Gemini API   
+- OpenCV (for face detection security)  
 
 ---
 
